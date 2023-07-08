@@ -5,8 +5,14 @@ import { extractQueryParams } from './utils/extractQueryParams.js'
 import { json } from './routes/middlewares/json.js'
 
 const server = http.createServer(async (req, res) =>{
+<<<<<<< HEAD
   if (req.headers['content-type']){
     if (req.headers['content-type'].toLowerCase().startsWith('application/json')){
+=======
+  console.log(req.headers)
+  if (req.headers['content-type']){
+    if (!req.headers['content-type'].startsWith('multipart/form-data') || !req.headers['content-type'].startsWith('text/csv')){
+>>>>>>> main
       await json(req, res)
     }
   }
