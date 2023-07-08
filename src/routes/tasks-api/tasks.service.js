@@ -1,4 +1,9 @@
 import { randomUUID } from 'node:crypto' 
+import csvParser from 'csv-parser';
+import { Transform } from 'stream';
+import { promisify } from 'util';
+import axios from 'axios'
+
 export class TaskService{
 
   constructor(repository){
@@ -73,7 +78,59 @@ export class TaskService{
     task['completed_at'] = date
     await this.repository.completeTask(task, resultValidation)
   }
+  
 
+  // async postCSVTasksService(req, resultValidation){
+
+  //   const parser = csvParser();
+
+  //   parser.on('data', (data) => {
+  //     console.log(data)
+  //   })
+
+  //   req.socket.setTimeout(0);
+
+  //   req.on('data', (chunk) => {
+  //     parser.write(chunk);
+  //   });
+
+  //   req.on('end', () => {
+  //     resultValidation.setResult('Success')
+  //   });
+  // }
+  
+  async postCSVTasksService(req, resultValidation){
+    const delay = promisify(setTimeout);
+    const parser = csvParser();
+    const transformStream = new Transform({
+      objectMode: true,
+      async transform(chunk, encoding, callback) {
+        // Process each CSV line with a delay
+        const task = {
+          title: chunk['title'],
+          description: chunk['description'],
+        };
+        console.log(task)
+        await axios.post('http://localhost:3333/tasks', task)
+          .then((response) => {
+            console.log('POSTOU');
+          })
+          .catch((error) => {
+            console.error('DEU ERRO');
+          });
+        this.push(chunk);
+        callback();
+      }
+    });
+
+    req.socket.setTimeout(0);
+    req.pipe(parser).pipe(transformStream).resume();
+    req.on('end', () => {
+      resultValidation.setResult('Success');
+    });
+  }
+
+  
   #verifyDescription(description, resultValidation){
     if (!description){
       resultValidation.addError("BodyError", "No description on body")
@@ -104,4 +161,3 @@ export class TaskService{
     }
   }
 }
-

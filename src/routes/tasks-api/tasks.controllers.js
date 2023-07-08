@@ -9,7 +9,11 @@ export class TaskController{
   }
 
   async postNewTaskController(req, resultValidation){
-    this.#verifyBody(req)
+    if (req.headers['content-type'].startsWith('multipart/form-data') || req.headers['content-type'].startsWith('text/csv')){
+      await this.service.postCSVTasksService(req, resultValidation)
+      return resultValidation
+    }
+    this.#verifyBody(req, resultValidation)
     if(resultValidation.hasError()){
       return resultValidation
     }
