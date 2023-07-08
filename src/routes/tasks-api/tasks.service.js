@@ -105,7 +105,7 @@ export class TaskService{
     req.socket.setTimeout(0);
     req.pipe(parser).pipe(transformStream).resume();
     req.on('end', () => {
-      resultValidation.setResult('Success');
+      console.log('DONE')
     });
   }
 
