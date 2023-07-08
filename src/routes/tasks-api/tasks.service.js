@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto' 
 import csvParser from 'csv-parser';
 import { Transform } from 'stream';
-import { promisify } from 'util';
 import axios from 'axios'
 
 export class TaskService{
@@ -79,28 +78,8 @@ export class TaskService{
     await this.repository.completeTask(task, resultValidation)
   }
   
-
-  // async postCSVTasksService(req, resultValidation){
-
-  //   const parser = csvParser();
-
-  //   parser.on('data', (data) => {
-  //     console.log(data)
-  //   })
-
-  //   req.socket.setTimeout(0);
-
-  //   req.on('data', (chunk) => {
-  //     parser.write(chunk);
-  //   });
-
-  //   req.on('end', () => {
-  //     resultValidation.setResult('Success')
-  //   });
-  // }
   
   async postCSVTasksService(req, resultValidation){
-    const delay = promisify(setTimeout);
     const parser = csvParser();
     const transformStream = new Transform({
       objectMode: true,
@@ -130,7 +109,6 @@ export class TaskService{
     });
   }
 
-  
   #verifyDescription(description, resultValidation){
     if (!description){
       resultValidation.addError("BodyError", "No description on body")
