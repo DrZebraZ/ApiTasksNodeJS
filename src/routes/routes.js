@@ -1,4 +1,4 @@
-import { taskRoutes } from "./tasks/tasks.router.js"
+import { taskRoutes } from "./tasks-api/tasks.router.js"
 
 function getRoutes(){
   let routes = []

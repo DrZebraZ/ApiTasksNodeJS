@@ -5,6 +5,7 @@ export function applyResult(result, res, successStatusCode) {
 		} else {
 			res.writeHead(400);
 		}
+		console.log(result.getErrorList())
 		res.end(JSON.stringify(result.getErrorList()));
 	} else if (result.isResultEmpty()) {
 		res.writeHead(204);

@@ -44,7 +44,7 @@ export class Database{
       return [false, e]
     }
   }
-
+  
   update(table, id, data){
     const rowIndex = this.#database[table].findIndex(row => row.id === id)
     if (rowIndex > -1){
