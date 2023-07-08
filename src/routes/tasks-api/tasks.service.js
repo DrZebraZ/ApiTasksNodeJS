@@ -84,7 +84,6 @@ export class TaskService{
     const transformStream = new Transform({
       objectMode: true,
       async transform(chunk, encoding, callback) {
-        // Process each CSV line with a delay
         const task = {
           title: chunk['title'],
           description: chunk['description'],
@@ -95,7 +94,7 @@ export class TaskService{
             console.log('POSTOU');
           })
           .catch((error) => {
-            console.error('DEU ERRO');
+            console.log('DEU ERRO');
           });
         this.push(chunk);
         callback();
